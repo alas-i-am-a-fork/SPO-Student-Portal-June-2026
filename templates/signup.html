@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+</head>
+<body>
+<center>
+    <h1>Student Portal<br><br>Sign Up</h1>
+
+     <form action="/signup" method="POST">
+
+        <p>
+            <label for="roll">Roll No: </label>
+            <input 
+            type="number" 
+            id="roll" 
+            name="roll" 
+            placeholder="Enter roll number" 
+            required>
+        </p>
+
+        <p>
+            <label for="name">Name: </label>
+            <input 
+            type="text" 
+            id="name" 
+            name="name" 
+            placeholder="Enter name"
+            required>
+        </p>
+
+        <p>
+            <label for="email">IITK Email: </label>
+            <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="Enter IITK email"
+            required>
+        </p>
+
+        <p>
+            <label for="password">Password: </label>
+            <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="Create a password"
+            required>
+        </p>
+
+        <button type="submit">Sign Up</button>
+
+    </form>
+
+    <p>
+        <a href="/login">Login</a>
+    </p>
+</center>
+</body>
+</html>
