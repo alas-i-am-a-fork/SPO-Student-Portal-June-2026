@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admins</title>
+</head>
+
+<body align="center">
+
+<h1>Student Portal</h1>
+
+<h2>Current Domain Admins</h2>
+
+<table border="1">
+
+<tr>
+    <th>Roll</th>
+    <th>Name</th>
+    <th>Domain</th>
+</tr>
+
+{{range .Admins}}
+<tr>
+    <td>{{.Roll}}</td>
+    <td>{{.Name}}</td>
+    <td>{{.Domain}}</td>
+</tr>
+{{end}}
+
+</table>
+
+<h2>Create a New Domain Admin</h2>
+
+<table border="1">
+
+<tr>
+    <th>Roll</th>
+    <th>Name</th>
+    <th>Action</th>
+</tr>
+
+{{range .Students}}
+<tr>
+    <td>{{.Roll}}</td>
+    <td>{{.Name}}</td>
+
+    <td>
+        <form action="/promote-admin" method="POST">
+
+            <input
+                type="hidden"
+                name="roll"
+                value="{{.Roll}}">
+
+            <input
+                type="text"
+                name="domain"
+                placeholder="Enter domain">
+
+            <button type="submit">
+                Promote
+            </button>
+
+        </form>
+    </td>
+</tr>
+{{end}}
+
+</table>
+
+</body>
+</html>
