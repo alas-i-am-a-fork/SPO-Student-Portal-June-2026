@@ -12,6 +12,104 @@ func home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hi tis I")
 }
 
+type SubmitRequestPageData struct {
+	Domains []string
+	Message string
+}
+
+func renderSubmitRequest(
+	w http.ResponseWriter,
+	message string,
+	domains []string,
+) {
+
+	tmpl := template.Must(
+		template.ParseFiles("templates/submit-request.html"),
+	)
+
+	tmpl.Execute(w, SubmitRequestPageData{
+		Domains: domains,
+		Message: message,
+	})
+}
+
+func submitRequest(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "GET" {
+
+		rows, err := db.Query(
+			`SELECT DISTINCT domain
+		 FROM records
+		 WHERE role = 'admin'
+		 AND domain IS NOT NULL
+		 ORDER BY domain`,
+		)
+
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		defer rows.Close()
+
+		var domains []string
+
+		for rows.Next() {
+
+			var domain string
+
+			err := rows.Scan(&domain)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+
+			domains = append(domains, domain)
+		}
+
+		renderSubmitRequest(
+			w,
+			"",
+			domains,
+		)
+
+		return
+	}
+
+	cookie, err := r.Cookie("user_roll")
+
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	roll := cookie.Value
+
+	title := r.FormValue("title")
+	domain := r.FormValue("domain")
+	description := r.FormValue("description")
+	links := r.FormValue("links")
+
+	_, err = db.Exec(
+		`INSERT INTO requests
+		(roll, title, domain, description, links, status)
+		VALUES ($1, $2, $3, $4, $5, $6)`,
+		roll,
+		title,
+		domain,
+		description,
+		links,
+		"Pending",
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Fprintln(w, "Request submitted successfully!")
+}
+
 func removeAdmin(w http.ResponseWriter, r *http.Request) {
 
 	roll := r.FormValue("roll")
@@ -417,6 +515,7 @@ func main() {
 	http.HandleFunc("/master-admin-home/manage-admins", manageAdmins)
 	http.HandleFunc("/promote-admin", promoteAdmin)
 	http.HandleFunc("/remove-admin", removeAdmin)
+	http.HandleFunc("/student-home/submit-request", submitRequest)
 	http.HandleFunc("/logout", logout)
 
 	fmt.Println("Server running on http://localhost:3000")

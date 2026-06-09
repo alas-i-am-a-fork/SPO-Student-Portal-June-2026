@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submit Approval Request</title>
+</head>
+
+<body align="center">
+
+<h1>Student Portal</h1>
+
+<h2>Submit Verification Request</h2>
+
+<form action="/student-home/submit-request" method="POST">
+
+    <p>Title</p>
+    <input type="text" name="title" required>
+
+    <p>Domain</p>
+    <select name="domain" required>
+
+        {{range .Domains}}
+        <option value="{{.}}">
+            {{.}}
+        </option>
+        {{end}}
+
+    </select>
+
+    <p>Description</p>
+
+    <textarea
+        name="description"
+        rows="10"
+        cols="50"
+        required></textarea>
+
+    <p>Relevant Links</p>
+
+    <textarea
+        name="links"
+        rows="3"
+        cols="50"></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Submit Request
+    </button>
+
+</form>
+
+</body>
+</html>
