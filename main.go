@@ -12,6 +12,31 @@ func home(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Hi tis I")
 }
 
+func removeAdmin(w http.ResponseWriter, r *http.Request) {
+
+	roll := r.FormValue("roll")
+
+	_, err := db.Exec(
+		`UPDATE records
+		 SET role = 'student',
+		     domain = NULL
+		 WHERE roll = $1`,
+		roll,
+	)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	http.Redirect(
+		w,
+		r,
+		"/master-admin-home/manage-admins",
+		http.StatusSeeOther,
+	)
+}
+
 func promoteAdmin(w http.ResponseWriter, r *http.Request) {
 
 	roll := r.FormValue("roll")
@@ -390,6 +415,8 @@ func main() {
 	http.HandleFunc("/domain-admin-home", adminHome)
 	http.HandleFunc("/master-admin-home", masterHome)
 	http.HandleFunc("/master-admin-home/manage-admins", manageAdmins)
+	http.HandleFunc("/promote-admin", promoteAdmin)
+	http.HandleFunc("/remove-admin", removeAdmin)
 	http.HandleFunc("/logout", logout)
 
 	fmt.Println("Server running on http://localhost:3000")

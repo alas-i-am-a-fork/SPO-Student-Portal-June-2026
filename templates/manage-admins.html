@@ -7,7 +7,7 @@
 <body align="center">
 
 <h1>Student Portal</h1>
-
+<center>
 <h2>Current Domain Admins</h2>
 
 <table border="1">
@@ -16,6 +16,7 @@
     <th>Roll</th>
     <th>Name</th>
     <th>Domain</th>
+    <th>Action</th>
 </tr>
 
 {{range .Admins}}
@@ -23,6 +24,20 @@
     <td>{{.Roll}}</td>
     <td>{{.Name}}</td>
     <td>{{.Domain}}</td>
+    <td>
+        <form action="/remove-admin" method="POST">
+
+            <input
+                type="hidden"
+                name="roll"
+                value="{{.Roll}}">
+
+            <button type="submit">
+                Remove
+            </button>
+
+        </form>
+    </td>
 </tr>
 {{end}}
 
@@ -66,6 +81,7 @@
 {{end}}
 
 </table>
+</center>
 
 </body>
 </html>
